@@ -4,31 +4,81 @@ from tree_visualizer import TreeVisualizer
 class RecursiveTraversal:
     @staticmethod
     def preorder(tree_node):
-        pass
+        if not tree_node:
+            return []
+        return [tree_node.data] + RecursiveTraversal.preorder(tree_node.left) + RecursiveTraversal.preorder(tree_node.right)
     @staticmethod
     def inorder(tree_node):
-        pass
+        if not tree_node:
+            return []
+        return RecursiveTraversal.inorder(tree_node.left) + [tree_node.data] + RecursiveTraversal.inorder(tree_node.right)
     @staticmethod
     def postorder(tree_node):
-        pass
+        if not tree_node:
+            return []
+        return RecursiveTraversal.postorder(tree_node.left) + RecursiveTraversal.postorder(tree_node.right) + [tree_node.data]
 
 
 class IterativeTraversal:
     @staticmethod
     def preorder(tree_node):
-        pass
+        myStack = []
+        result = []
+        x = tree_node
+        while x or myStack : 
+            if x:
+                myStack.append(x)
+                result.append(x.data)
+                x = x.left
+            else:
+                x = myStack.pop()
+                x = x.right
+        return  result
 
     @staticmethod
     def inorder(tree_node):
-        pass
+        myStack = []
+        result = []
+        x = tree_node
+        while x or myStack : 
+            if x:
+                myStack.append(x)
+                x = x.left
+            else:
+                x = myStack.pop()
+                result.append(x.data)
+                x = x.right
+        return  result
 
     @staticmethod
     def postorder(tree_node):
-        pass
+        myStack = []
+        result = []
+        x = tree_node
+        while x or myStack : 
+            if x:
+                myStack.append(x)
+                result.append(x.data)
+                x = x.right
+            else:
+                x = myStack.pop()
+                x = x.left
+        return  result[::-1]
 
     @staticmethod
     def bfs(tree_node):
-        pass
+        if not tree_node:
+            return []
+        queue = [tree_node]
+        result = []
+        while len(queue) > 0:
+            cur_node = queue.pop(0)
+            if cur_node.left is not None:
+                queue.append(cur_node.left)
+            if cur_node.right is not None:
+                queue.append(cur_node.right)
+            result.append(cur_node.data)
+        return result
 
 
 expected_preorder = [
@@ -95,8 +145,32 @@ if __name__ == '__main__':
         assert actual == expected, f'expected {expected}, got {actual}'
         print(actual)
 
-    print('POSTORDER:')
+    print('POSTORDER_:')
     for tree, expected in zip(test_trees, expected_postorder):
         actual = RecursiveTraversal.postorder(tree)
+        assert actual == expected, f'expected {expected}, got {actual}'
+        print(actual)
+
+    print('PREORDER_I:')
+    for tree, expected in zip(test_trees, expected_preorder):
+        actual = IterativeTraversal.preorder(tree)
+        assert actual == expected, f'expected {expected}, got {actual}'
+        print(actual)
+
+    print('INORDER_I:')
+    for tree, expected in zip(test_trees, expected_inorder):
+        actual = IterativeTraversal.inorder(tree)
+        assert actual == expected, f'expected {expected}, got {actual}'
+        print(actual)
+
+    print('POSTORDER_I:')
+    for tree, expected in zip(test_trees, expected_postorder):
+        actual = IterativeTraversal.postorder(tree)
+        assert actual == expected, f'expected {expected}, got {actual}'
+        print(actual)
+
+    print('BFS_I:')
+    for tree, expected in zip(test_trees, expected_bfs):
+        actual = IterativeTraversal.bfs(tree)
         assert actual == expected, f'expected {expected}, got {actual}'
         print(actual)

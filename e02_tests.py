@@ -45,7 +45,7 @@ if __name__ == '__main__':
     tree = BST()
     tree.insert_list([5, 3, 9, 1, 4])
     tree.delete_node(tree.find_node(3))
-    assert tree.root == TreeNode(5, left=TreeNode(4, left=TreNode(1)), right=TreeNode(9)), 'expected True, got False'
+    assert tree.root == TreeNode(5, left=TreeNode(4, left=TreeNode(1)), right=TreeNode(9)), 'expected True, got False'
 
     tree = BST()
     tree.insert_list([5, 3, 9, 1])
