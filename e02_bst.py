@@ -1,5 +1,5 @@
 from tree_node import TreeNode
-from tree_visualizer import TreeVisualizer
+#from tree_visualizer import TreeVisualizer
 from e01_traversals import RecursiveTraversal
 
 class BST:
@@ -94,8 +94,8 @@ class BST:
             temp = None
         return self.root
 
-    def visualize(self):
-        TreeVisualizer.visualize(self.root)
+  #  def visualize(self):
+    #    TreeVisualizer.visualize(self.root)
 
 
     def traverse(self):

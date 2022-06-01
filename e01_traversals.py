@@ -1,5 +1,5 @@
 from tree_node import TreeNode
-from tree_visualizer import TreeVisualizer
+#from tree_visualizer import TreeVisualizer
 
 class RecursiveTraversal:
     @staticmethod
@@ -130,8 +130,8 @@ test_trees = [
 
 
 if __name__ == '__main__':
-    for tree in test_trees:
-        TreeVisualizer.visualize(tree)
+   # for tree in test_trees:
+    #    TreeVisualizer.visualize(tree)
 
     print('PREORDER:')
     for tree, expected in zip(test_trees, expected_preorder):

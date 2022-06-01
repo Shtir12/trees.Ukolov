@@ -2,90 +2,103 @@ from tree_node import TreeNode
 from e02_bst import BST
 
 class AVLTreeNode(TreeNode):
-    def __init__(self,data=0,left=None,right=None): #,height=0):
+    def __init__(self,data=0,bf=0,left=None,right=None, parent=None, height=1):
         TreeNode.__init__(self,data,left,right)
-        #self.height = height
+        self.bf = bf
+        self.parent = parent
+        self.height = height
+        #print(data, "-", height)
 
-class AVLTree(BST):
+class AVLTree(BST):      
+    #def insert_node(self, data, current_node=0):
+        #Normal BST insert
+        #BST.insert_node(self, data, current_node=0)
+    
     def __init__(self):
-        BST.__init__(self)
-        self.height = -1  
-        self.balance = 0; 
-                
-    def height(self):
-        if self.root: 
-            return self.root.height 
-        else: 
-            return 0  
-    
-    def insert_node(self, data, current_node=0):
-        BST.insert_node(self, data, current_node=0)
-        
-    def rebalance(self):
-        self.update_heights(False)
-        self.update_balances(False)
-        while self.balance < -1 or self.balance > 1: 
-            if self.balance > 1:
-                if self.root.left.balance < 0:  
-                    self.root.left.lrotate()
-                    self.update_heights()
-                    self.update_balances()
-                self.rrotate()
-                self.update_heights()
-                self.update_balances()
-                
-            if self.balance < -1:
-                if self.root.right.balance > 0:  
-                    self.root.right.rrotate()
-                    self.update_heights()
-                    self.update_balances()
-                self.lrotate()
-                self.update_heights()
-                self.update_balances()
+        super().__init__()
 
+    def insert_list(self, data_list):
+        for data in data_list:
+            self.insert_node(data)
 
-            
-    def rrotate(self):
-        A = self.root 
-        B = self.root.left.root 
-        T = B.right.root 
-        
-        self.root = B 
-        B.right.root = A 
-        A.left.root = T 
+    def insert_node(self, data):
+        self.root = self._vsavka(self.root, data)
 
-    
-    def lrotate(self): 
-        A = self.root 
-        B = self.root.right.root 
-        T = B.left.root 
-        
-        self.root = B 
-        B.left.root = A 
-        A.right.root = T 
-        
-            
-    def update_heights(self, recurse=True):
-        if not self.root == None: 
-            if recurse: 
-                if self.root.left != None: 
-                    self.root.left.update_heights()
-                if self.root.right != None:
-                    self.root.right.update_heights()
-            
-            self.height = max(self.root.left.height,
-                              self.root.right.height) + 1 
-        else: 
-            self.height = -1 
-            
-    def update_balances(self, recurse=True):
-        if not self.root == None: 
-            if recurse: 
-                if self.root.left != None: 
-                    self.root.left.update_balances()
-                if self.root.right != None:
-                    self.root.right.update_balances()
+    def _vsavka(self, root: AVLTreeNode, data) -> AVLTreeNode:
+        if not root:
+            return AVLTreeNode(data, bf=0)
+        if data < root.data:
+            left_sub_root = self._vsavka(root.left, data)
+            root.left = left_sub_root
+            left_sub_root.parent = root
+        elif data > root.data:
+            right_sub_root = self._vsavka(root.right, data)
+            root.right = right_sub_root
+            right_sub_root.parent = root
+        else:
+            return root
+        root.height = max(self.poluchit_visotu(root.left), self.poluchit_visotu(root.right)) + 1
+        root.bf = self.poluchit_visotu(root.left) - self.poluchit_visotu(root.right)
+        return self.rebalance(root)
 
-            self.balance = self.root.left.height - self.root.right.height 
-        else: 
-            self.balance = 0 
+    def rebalance(self, root: AVLTreeNode) -> AVLTreeNode:
+        if root.bf == 2:
+            if root.left.bf < 0:  # L-R
+                root.left = self.vertel_na_levo(root.left)
+                return self.vertel_na_pravo(root)
+            else:  # L-L
+                return self.vertel_na_pravo(root)
+        elif root.bf == -2:
+            if root.right.bf > 0:  # R-L
+                root.right = self.vertel_na_pravo(root.right)
+                return self.vertel_na_levo(root)
+            else:  # R-R
+                return self.vertel_na_levo(root)
+        else:
+            return root
+
+    def vertel_na_pravo(self, root: AVLTreeNode) -> AVLTreeNode:
+        pivot = root.left
+        tmp = pivot.right
+        pivot.right = root
+        pivot.parent = root.parent
+        root.parent = pivot
+        root.left = tmp
+        if tmp:
+            tmp.parent = root
+        if pivot.parent:
+            if pivot.parent.left == root:
+                pivot.parent.left = pivot
+            else:
+                pivot.parent.right = pivot
+        root.height = max(self.poluchit_visotu(root.left), self.poluchit_visotu(root.right)) + 1
+        root.bf = self.poluchit_visotu(root.left) - self.poluchit_visotu(root.right)
+        pivot.height = max(self.poluchit_visotu(pivot.left), self.poluchit_visotu(pivot.right)) + 1
+        pivot.bf = self.poluchit_visotu(pivot.left) - self.poluchit_visotu(pivot.right)
+        return pivot
+
+    def vertel_na_levo(self, root: AVLTreeNode) -> AVLTreeNode:
+        pivot = root.right
+        tmp = pivot.left
+        pivot.left = root
+        pivot.parent = root.parent
+        root.parent = pivot
+        root.right = tmp
+        if tmp:
+            tmp.parent = root
+        if pivot.parent:
+            if pivot.parent.left == root:
+                pivot.parent.left = pivot
+            else:
+                pivot.parent.right = pivot
+        root.height = max(self.poluchit_visotu(root.left), self.poluchit_visotu(root.right)) + 1
+        root.bf = self.poluchit_visotu(root.left) - self.poluchit_visotu(root.right)
+        pivot.height = max(self.poluchit_visotu(pivot.left), self.poluchit_visotu(pivot.right)) + 1
+        pivot.bf = self.poluchit_visotu(pivot.left) - self.poluchit_visotu(pivot.right)
+        return pivot
+
+    def poluchit_visotu(self, root: AVLTreeNode) -> int:
+        if not root:
+            return 0
+        else:
+            return root.height

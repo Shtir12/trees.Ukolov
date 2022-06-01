@@ -12,23 +12,24 @@ if __name__ == '__main__':
     tree.insert_node(5)
     assert tree.root == AVLTreeNode(5), 'expected True, got False'
 
-    tree.root = tree.insert_node(3)
+    tree.insert_node(3)
     assert tree.root == AVLTreeNode(5, height=2, left=AVLTreeNode(3)), 'expected True, got False'
 
-    tree.root = tree.insert_node(4)
+    tree.insert_node(4)
     assert tree.root == AVLTreeNode(4, height=2, left=AVLTreeNode(3), right=AVLTreeNode(5)), 'expected True, got False'
 
-    tree.root = tree.insert_node(7)
+    tree.insert_node(7)
     assert tree.root == AVLTreeNode(4, height=3, left=AVLTreeNode(3), right=AVLTreeNode(5, height=2, right=AVLTreeNode(7))), 'expected True, got False'
 
-    tree.root = tree.insert_node(2)
+    tree.insert_node(2)
     assert tree.root == AVLTreeNode(4, height=3, left=AVLTreeNode(3, height=2, left=AVLTreeNode(2)), right=AVLTreeNode(5, height=2, right=AVLTreeNode(7))), 'expected True, got False'
 
 
-    tree.root = tree.insert_node(1)
+    tree.insert_node(1)
     assert tree.root == AVLTreeNode(4, height=3, left=AVLTreeNode(2, height=2, left=AVLTreeNode(1), right=AVLTreeNode(3)), right=AVLTreeNode(5, height=2, right=AVLTreeNode(7))), 'expected True, got False'
 
-    tree.root = tree.insert_list([8, 9, 10, 11, 12, 13])
+    tree.insert_list([8, 9, 10, 11, 12, 13])
     assert tree.root == AVLTreeNode(9, height=4,
     left=AVLTreeNode(4, height=3, left=AVLTreeNode(2, height=2, left=AVLTreeNode(1), right = AVLTreeNode(3)), right = AVLTreeNode(7, height=2, left=AVLTreeNode(5), right=AVLTreeNode(8))),
     right=AVLTreeNode(11, height=3, left=AVLTreeNode(10), right=AVLTreeNode(12, height=2, right=AVLTreeNode(13)))), 'expected True, got False'
+    
